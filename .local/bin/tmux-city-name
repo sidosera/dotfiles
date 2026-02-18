@@ -5,17 +5,15 @@ cities=(
   tokyo oslo lima paris rome dubai seoul cairo lagos delhi
   milan kyoto hanoi baku doha riga wien bonn cork york
   nice lyon graz brno aizu kobe nara agra pune suva
-  bern oslo cork faro split pula kotor ohrid bari lecce
+  bern faro split pula kotor ohrid bari lecce
   siena lucca parma pisa padua como asti alba lodi pavia
   aosta udine trento bolzano rimini forli pesaro ancona perugia
 )
 
-used_names=""
-if tmux list-windows -F '#{window_name}' 2>/dev/null; then
-  used_names=$(tmux list-windows -F '#{window_name}' 2>/dev/null)
-fi
+used_names=$(tmux list-windows -F '#{window_name}' 2>/dev/null)
 
-for city in $(shuf -e "${cities[@]}"); do
+# Shuffle using random sort (macOS compatible)
+for city in $(printf '%s\n' "${cities[@]}" | while read c; do echo "$RANDOM $c"; done | sort -n | cut -d' ' -f2-); do
   if ! echo "$used_names" | grep -qw "$city"; then
     echo "$city"
     exit 0
